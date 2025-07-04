@@ -49,6 +49,14 @@ Note: This will **not** work if Steam is installed as a Flatpak.
       - Any custom options for the game (optional).
       - The full path to an icon file (optional).
 
+## How to Delete a Shortcut
+
+Deleting a shortcut is as simple as deleting the file from your desktop.
+
+The script creates two items: the main `.desktop` file on your desktop and a symbolic link (symlink) to that file in your application menu folder. Because the entry in your start menu is only a link, you just need to **delete the shortcut file from your desktop**.
+
+Once the original file is gone, the symlink in the start menu becomes broken. Your desktop environment will automatically detect this and remove the icon from your application menu, usually after you log out and log back in, or after a system restart.
+
 ## Understanding Launch Options
 
 The script will ask for "Launch Options". This allows you to add special commands or variables, just like you would in the Steam client.
