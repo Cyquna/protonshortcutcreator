@@ -7,7 +7,7 @@
 # Description: This script automates the creation of .desktop shortcuts for
 #              running non-Steam Windows applications with a specific Proton
 #              version, without needing the Steam client to be running.
-# Version: 1.0
+# Version: 1.1
 # ==============================================================================
 
 # --- Configuration ---
@@ -149,7 +149,16 @@ while [ ! -f "$EXE_PATH" ]; do
 done
 echo
 
-# 6. Get Icon Path
+# 6. Get Launch Options (NEW SECTION)
+print_header "Enter Launch Options (Optional)"
+echo "Enter launch options as you would in Steam."
+echo "Use %command% as a placeholder for the game executable."
+echo "Example: WINEDLLOVERRIDES=\"winmm=n,b\" %command% -fullscreen"
+echo "Press Enter to skip."
+read -p "Launch Options: " LAUNCH_OPTIONS
+echo
+
+# 7. Get Icon Path
 print_header "Enter Icon Path"
 echo "Provide the full, absolute path to the icon file (.png, .ico)."
 echo "This is optional. Press Enter to skip and use a default icon."
@@ -169,8 +178,20 @@ echo
 # Define the full data path for the compatdata directory
 STEAM_COMPAT_DATA_PATH="$COMPATDATA_BASE_PATH/$COMPATDATA_ID"
 
-# Construct the Exec command
-EXEC_COMMAND="/bin/bash -c 'STEAM_COMPAT_CLIENT_INSTALL_PATH=\"$STEAM_INSTALL_PATH\" STEAM_COMPAT_DATA_PATH=\"$STEAM_COMPAT_DATA_PATH\" \"$PROTON_RUN_PATH\" run \"$EXE_PATH\"'"
+# The core command that %command% will be replaced with
+CORE_COMMAND="\"$PROTON_RUN_PATH\" run \"$EXE_PATH\""
+
+# If user provided launch options, use them. Otherwise, default to just the command.
+if [ -n "$LAUNCH_OPTIONS" ]; then
+    # Replace %command% placeholder with the actual core command
+    FULL_PROTON_COMMAND="${LAUNCH_OPTIONS//%command%/$CORE_COMMAND}"
+else
+    # If no options, the command is just the core command
+    FULL_PROTON_COMMAND="$CORE_COMMAND"
+fi
+
+# Construct the final Exec command string for the .desktop file
+EXEC_COMMAND="/bin/bash -c 'STEAM_COMPAT_CLIENT_INSTALL_PATH=\"$STEAM_INSTALL_PATH\" STEAM_COMPAT_DATA_PATH=\"$STEAM_COMPAT_DATA_PATH\" $FULL_PROTON_COMMAND'"
 
 # Sanitize App Name for the filename
 FILENAME=$(echo "$APP_NAME" | sed 's/[^a-zA-Z0-9._-]/_/g').desktop
@@ -201,7 +222,7 @@ fi
 ln -s "$DESKTOP_FILE_PATH" "$SYMLINK_PATH"
 
 # --- Final Output ---
-print_header "Success!"
+print_header "Success! ✅"
 echo "Shortcut created on your desktop:"
 echo "  -> $DESKTOP_FILE_PATH"
 echo
