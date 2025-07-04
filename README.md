@@ -46,7 +46,7 @@ Note: This will **not** work if Steam is installed as a Flatpak.
       - Which Proton version to use (from a list it finds).
       - Which `compatdata` prefix to use (from a list, or you can create a new one).
       - The full path to the application's `.exe` file.
-      - **Launch Options:** Any custom options for the game (optional).
+      - Any custom options for the game (optional).
       - The full path to an icon file (optional).
 
 ## Understanding Launch Options
