@@ -2,6 +2,8 @@
 
 A simple yet powerful bash script for Linux users to create `.desktop` shortcuts for non-Steam Windows applications, allowing them to run with Proton without needing the Steam client to be open.
 
+Note: This will **not** work if Steam is installed as a Flatpak.
+
 ## Features
 
 -   **Interactive & User-Friendly:** A guided command-line interface walks you through the process.
